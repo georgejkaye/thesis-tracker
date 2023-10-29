@@ -41,9 +41,9 @@ echo "Inserting commit $COMMIT..."
 
 ORIGINAL_DIR=$PWD
 
-git stash
-git checkout $COMMIT
-git submodule update
+git stash &> /dev/null
+git checkout $COMMIT &> /dev/null
+git submodule update &> /dev/null
 
 if [ $? -ne 0 ] ; then
     echo "Commit does not exist!"
@@ -63,14 +63,20 @@ DATETIME="${DATETIME//:/%3A}"
 
 WORDS=$(texcount -inc $MAIN_FILE.tex | grep "Words in text:" | awk 'END{print $4}')
 
-latexmk -pdf -halt-on-error $MAIN_FILE.tex
+echo "Compiling latex file..."
+
+latexmk -pdf -halt-on-error $MAIN_FILE.tex &> /dev/null
 
 if [ $? -ne 0 ] ; then
     echo "Latex file does not compile!"
+    latexmk -C &> /dev/null
     exit 1
 fi
 
 PAGES=$(pdftk $MAIN_FILE.pdf dump_data output | grep -i NumberOfPages | awk '{print $2}')
+latexmk -C &> /dev/null
+
+echo "Getting token..."
 
 TOKEN_RESPONSE=$(curl -s -X 'POST' \
   $ENDPOINT/token \
@@ -86,6 +92,8 @@ fi
 
 TOKEN=$(echo $TOKEN_RESPONSE | json access_token)
 
+echo "Inserting commit..."
+
 RESULT=$(curl -s -X 'POST' \
   "$ENDPOINT/commit?commit_sha=$COMMIT&commit_datetime=$DATETIME&words=$WORDS&pages=$PAGES" \
   -H 'accept: application/json' \
@@ -93,6 +101,6 @@ RESULT=$(curl -s -X 'POST' \
   -d ''
 )
 
-git stash pop
-git checkout main
+git stash pop &> /dev/null
+git checkout main &> /dev/null
 cd $ORIGINAL_DIR
