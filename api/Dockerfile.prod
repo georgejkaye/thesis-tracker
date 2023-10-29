@@ -34,7 +34,6 @@ ENV MSMTP_EVAL_SCRIPT=/app/mail/get_token.py \
     MAILCTL_OAUTH_DIR=/app/mail/oauth
 
 COPY src ./app/src
-COPY .env ./app/.env
 
 WORKDIR /app
 
