@@ -72,8 +72,8 @@ def get_commits_from_db(
     statement = f"""
         SELECT commit_sha, commit_datetime, words, pages FROM commit
         {conditions_string}
+        ORDER BY commit_datetime DESC
     """
-    print(statement)
     cur.execute(statement)
     rows = cur.fetchall()
     commit_objects = map(lambda b: Commit(b[0], b[1], b[2], b[3]), rows)
