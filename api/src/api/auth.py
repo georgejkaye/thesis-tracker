@@ -1,7 +1,9 @@
 from datetime import timedelta, datetime
 import os
+from typing import Annotated, Optional
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
@@ -23,7 +25,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/token", auto_error=False)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token", auto_error=False)
 
 
 class Token(BaseModel):
@@ -49,7 +51,7 @@ def authenticate_user(username: str, password: str) -> bool:
     hashed_password = get_env_variable("ADMIN_PASSWORD_HASHED")
     if not (valid_user == username):
         return False
-    if not verify_password(get_password_hash(password), hashed_password):
+    if not verify_password(password, hashed_password):
         return False
     return True
 
@@ -63,3 +65,20 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, get_secret_key(), algorithm=ALGORITHM)
     return encoded_jwt
+
+
+async def validate_token(
+    token: Annotated[Optional[str], Depends(oauth2_scheme)]
+) -> Optional[bool]:
+    if token:
+        credentials_exception = HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        try:
+            jwt.decode(token, get_secret_key(), algorithms=[ALGORITHM])
+            return True
+        except JWTError:
+            raise credentials_exception
+    return None

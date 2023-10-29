@@ -1,5 +1,6 @@
-from datetime import timedelta
-from typing import Annotated
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from typing import Annotated, Optional
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -8,7 +9,9 @@ from api.auth import (
     authenticate_user,
     create_access_token,
     get_env_variable,
+    validate_token,
 )
+from api.database import Commit, add_commit
 
 
 app = FastAPI(
@@ -41,10 +44,20 @@ async def login(
         )
     # Create an access token
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
+    access_token = create_access_token(data={}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.post("/commit", summary="Submit a new commit")
+async def post_commit(
+    token: Annotated[Optional[str], Depends(validate_token)],
+    commit_sha: str,
+    commit_datetime: datetime,
+    words: int,
+    pages: int,
+) -> None:
+    commit = Commit(commit_sha, commit_datetime, words, pages)
+    add_commit(commit)
 
 
 import uvicorn

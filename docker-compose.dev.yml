@@ -10,6 +10,11 @@ services:
     environment:
       API_ENV: dev
       API_PORT: ${API_PORT}
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD_HASHED: ${ADMIN_PASSWORD_HASHED}
+      SECRET_KEY: ${SECRET_KEY}
+    volumes:
+      - ./api/src:/app/src
   # client:
   #   build:
   #     context: client
