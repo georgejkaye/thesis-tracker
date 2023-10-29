@@ -41,10 +41,9 @@ echo "Inserting commit $COMMIT..."
 
 ORIGINAL_DIR=$PWD
 
-cd $REPO_DIR
-
-git stash &> /dev/null
-git checkout $COMMIT &> /dev/null
+git stash
+git checkout $COMMIT
+git submodule update
 
 if [ $? -ne 0 ] ; then
     echo "Commit does not exist!"
@@ -64,7 +63,7 @@ DATETIME="${DATETIME//:/%3A}"
 
 WORDS=$(texcount -inc $MAIN_FILE.tex | grep "Words in text:" | awk 'END{print $4}')
 
-latexmk -pdf $MAIN_FILE.tex &> /dev/null
+latexmk -pdf -halt-on-error $MAIN_FILE.tex
 
 if [ $? -ne 0 ] ; then
     echo "Latex file does not compile!"
@@ -94,6 +93,6 @@ RESULT=$(curl -s -X 'POST' \
   -d ''
 )
 
-git stash pop &> /dev/null
-git checkout main &> /dev/null
+git stash pop
+git checkout main
 cd $ORIGINAL_DIR
