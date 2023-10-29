@@ -11,7 +11,7 @@ from api.auth import (
     get_env_variable,
     validate_token,
 )
-from api.database import Commit, add_commit
+from api.database import Commit, add_commit, get_commits_from_db
 
 
 app = FastAPI(
@@ -62,12 +62,10 @@ async def post_commit(
 
 @app.get("/commits", summary="Get commits")
 async def get_commits(
-    token: Annotated[Optional[str], Depends(validate_token)],
-    start: Optional[datetime],
-    end: Optional[datetime],
+    start: Optional[datetime] = None,
+    end: Optional[datetime] = None,
 ) -> list[Commit]:
-    get_commits_from_db(start, end)
-
+    return get_commits_from_db(start, end)
 
 import uvicorn
 

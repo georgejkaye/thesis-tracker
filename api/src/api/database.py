@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Optional
 from click import Option
+from fastapi import HTTPException
 
 import psycopg2
 
@@ -38,17 +39,21 @@ def add_commit(new_commit: Commit) -> None:
         INSERT INTO commit(commit_sha, commit_datetime, words, pages)
         VALUES (%(sha)s, %(dt)s, %(words)s, %(pages)s)
     """
-    cur.execute(
-        statement,
-        {
-            "sha": new_commit.commit_sha,
-            "dt": new_commit.commit_datetime,
-            "words": new_commit.words,
-            "pages": new_commit.pages,
-        },
-    )
-    conn.commit()
-    disconnect(conn, cur)
+    try:
+        cur.execute(
+            statement,
+            {
+                "sha": new_commit.commit_sha,
+                "dt": new_commit.commit_datetime,
+                "words": new_commit.words,
+                "pages": new_commit.pages,
+            },
+        )
+        conn.commit()
+        disconnect(conn, cur)
+    except psycopg2.UniqueViolation as e:
+        raise HTTPException(status_code=400, detail="Commit already exists")
+
 
 
 def get_commits_from_db(
@@ -68,7 +73,9 @@ def get_commits_from_db(
         SELECT commit_sha, commit_datetime, words, pages FROM commit
         {conditions_string}
     """
+    print(statement)
     cur.execute(statement)
     rows = cur.fetchall()
     commit_objects = map(lambda b: Commit(b[0], b[1], b[2], b[3]), rows)
+    conn.close()
     return commit_objects
