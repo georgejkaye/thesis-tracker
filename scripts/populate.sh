@@ -15,6 +15,5 @@ COMMITS=$(git log | grep "commit [a-z0-9]*" | awk '{print $2}')
 
 for COMMIT in $COMMITS
 do
-    echo $INSERT_SCRIPT $REPO_DIR $MAIN_FILE $ENDPOINT $USER $PASSWORD $COMMIT
     $INSERT_SCRIPT $REPO_DIR $MAIN_FILE $ENDPOINT $USER $PASSWORD $COMMIT
 done

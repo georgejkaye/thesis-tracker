@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
+from click import Option
 
 import psycopg2
 
@@ -48,3 +49,26 @@ def add_commit(new_commit: Commit) -> None:
     )
     conn.commit()
     disconnect(conn, cur)
+
+
+def get_commits_from_db(
+    start: Optional[datetime] = None, end: Optional[datetime] = None
+) -> list[Commit]:
+    (conn, cur) = connect()
+    conditions = []
+    if start is not None:
+        conditions.append("commit_datetime >= %(start)s")
+    if end is not None:
+        conditions.append("commit_datetime <= %(end)s")
+    if len(conditions) == 0:
+        conditions_string = ""
+    else:
+        conditions_string = f"WHERE {' AND '.join(conditions)}"
+    statement = f"""
+        SELECT commit_sha, commit_datetime, words, pages FROM commit
+        {conditions_string}
+    """
+    cur.execute(statement)
+    rows = cur.fetchall()
+    commit_objects = map(lambda b: Commit(b[0], b[1], b[2], b[3]), rows)
+    return commit_objects

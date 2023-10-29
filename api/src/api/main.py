@@ -60,6 +60,15 @@ async def post_commit(
     add_commit(commit)
 
 
+@app.get("/commits", summary="Get commits")
+async def get_commits(
+    token: Annotated[Optional[str], Depends(validate_token)],
+    start: Optional[datetime],
+    end: Optional[datetime],
+) -> list[Commit]:
+    get_commits_from_db(start, end)
+
+
 import uvicorn
 
 
