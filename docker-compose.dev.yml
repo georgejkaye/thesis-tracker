@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: api
+      dockerfile: Dockerfile.dev
+      args:
+        POETRY_VERSION: ${POETRY_VERSION}
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    environment:
+      API_ENV: dev
+      API_PORT: ${API_PORT}
+  # client:
+  #   build:
+  #     context: client
+  #     dockerfile: Dockerfile.dev
+  #     args:
+  #       API_URL: "http://api:${API_PORT}"
+  #   ports:
+  #     - "${CLIENT_PORT}:${CLIENT_PORT}"
+  #   environment:
+  #     API_URL: "http://api:${API_PORT}"
+  #   depends_on:
+  #     - api
+  #   volumes:
+  #     - ./client:/app
+  #     - ./client/node_modules:/app/node_modules
