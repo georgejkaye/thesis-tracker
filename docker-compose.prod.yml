@@ -15,7 +15,7 @@ services:
         POETRY_VERSION: ${POETRY_VERSION}
         API_PORT: ${API_PORT}
     ports:
-      - "${API_PORT}:8000"
+      - "${API_PORT}:${API_PORT}"
     env_file:
       - ./.env
     environment:
@@ -48,7 +48,7 @@ services:
       args:
         API_URL: "http://api:${API_PORT}"
     ports:
-      - "${CLIENT_PORT}:3000"
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
     environment:
       API_URL: "http://api:${API_PORT}"
       CLIENT_PORT: ${CLIENT_PORT}
