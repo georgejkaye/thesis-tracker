@@ -67,6 +67,7 @@ async def get_commits(
 ) -> list[Commit]:
     return get_commits_from_db(start, end)
 
+
 import uvicorn
 
 
@@ -81,7 +82,7 @@ def start():
     uvicorn.run(
         "api.main:app",
         host="0.0.0.0",
-        port=8000,
+        port=get_env_variable("API_PORT"),
         reload=reload,
     )
 

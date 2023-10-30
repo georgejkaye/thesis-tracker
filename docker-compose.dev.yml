@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile.dev
       args:
         POETRY_VERSION: ${POETRY_VERSION}
+        API_PORT: ${API_PORT}
     ports:
       - "${API_PORT}:${API_PORT}"
     environment:
