@@ -82,7 +82,7 @@ def start():
     uvicorn.run(
         "api.main:app",
         host="0.0.0.0",
-        port=get_env_variable("API_PORT"),
+        port=int(get_env_variable("API_PORT")),
         reload=reload,
     )
 

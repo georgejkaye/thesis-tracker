@@ -30,10 +30,10 @@ services:
       DB_NAME: ${DB_NAME}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.cookies_api.rule=Host(`${API_HOST}`)"
-      - "traefik.http.routers.cookies_api.tls=true"
-      - "traefik.http.routers.cookies_api.tls.certresolver=lets-encrypt"
-      - "traefik.port=${API_PORT}"
+      - "traefik.http.routers.thesis_api.rule=Host(`${API_HOST}`)"
+      - "traefik.http.routers.thesis_api.tls=true"
+      - "traefik.http.routers.thesis_api.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.thesis_api.loadbalancer.server.port=${API_PORT}"
     networks:
       - internal
       - web
@@ -47,6 +47,7 @@ services:
       dockerfile: Dockerfile.prod
       args:
         API_URL: "http://api:${API_PORT}"
+        CLIENT_PORT: ${CLIENT_PORT}
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
     environment:
@@ -54,10 +55,10 @@ services:
       CLIENT_PORT: ${CLIENT_PORT}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.cookies_client.rule=Host(`${CLIENT_HOST}`)"
-      - "traefik.http.routers.cookies_client.tls=true"
-      - "traefik.http.routers.cookies_client.tls.certresolver=lets-encrypt"
-      - "traefik.port=${CLIENT_PORT}"
+      - "traefik.http.routers.thesis_client.rule=Host(`${CLIENT_HOST}`)"
+      - "traefik.http.routers.thesis_client.tls=true"
+      - "traefik.http.routers.thesis_client.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.thesis_client.loadbalancer.server.port=${CLIENT_PORT}"
     networks:
       - internal
       - web

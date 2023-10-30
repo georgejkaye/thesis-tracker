@@ -20,8 +20,7 @@ COPY . .
 
 ARG API_URL
 ENV API_URL ${API_URL}
-ARG API_PORT
-RUN yarn build -p ${API_PORT}
+RUN yarn build
 
 FROM base AS runner
 
@@ -43,6 +42,8 @@ USER nextjs
 
 #EXPOSE 3000
 
+ARG CLIENT_PORT
+ENV PORT ${CLIENT_PORT}
 ENV HOSTNAME "0.0.0.0"
 
 CMD ["node", "server.js"]
