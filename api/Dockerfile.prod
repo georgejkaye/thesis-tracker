@@ -28,10 +28,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=builder /app/pyproject.toml ./app/pyproject.toml
 
-ENV MSMTP_EVAL_SCRIPT=/app/mail/get_token.py \
-    MSMTP_CONFIG_FILE=/app/mail/msmtprc \
-    MAILCTL_SERVICES_FILE=/app/mail/services.yaml \
-    MAILCTL_OAUTH_DIR=/app/mail/oauth
+ENV PYTHONPATH=/app/src:$PYTHONPATH
 
 COPY src ./app/src
 
