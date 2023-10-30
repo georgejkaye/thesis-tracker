@@ -37,6 +37,4 @@ COPY src ./app/src
 
 WORKDIR /app
 
-#EXPOSE ${API_PORT}
-
 ENTRYPOINT ["python", "src/api/main.py"]
