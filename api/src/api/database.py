@@ -7,14 +7,7 @@ import os
 
 import psycopg2
 
-from api.auth import get_env_variable
-
-def read_secret(file : str) -> Optional[str]:
-    if os.path.isfile(file) :
-        with open(file) as f:
-            value = f.readline().replace("\n", "")
-        return value
-    return None
+from api.auth import get_env_variable, read_secret
 
 def connect() -> tuple[Any, Any]:
     conn = psycopg2.connect(
