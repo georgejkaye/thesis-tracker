@@ -7,6 +7,12 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
+def read_secret(file : str) -> Optional[str]:
+    if os.path.isfile(file) :
+        with open(file) as f:
+            value = f.readline().replace("\n", "")
+        return value
+    return None
 
 def get_env_variable(name: str) -> str:
     var = os.getenv(name)
@@ -18,7 +24,7 @@ def get_env_variable(name: str) -> str:
 
 
 def get_secret_key() -> str:
-    return get_env_variable("SECRET_KEY")
+    return read_secret("SECRET_KEY")
 
 
 ALGORITHM = "HS256"
@@ -48,7 +54,7 @@ def get_password_hash(password) -> str:
 
 def authenticate_user(username: str, password: str) -> bool:
     valid_user = get_env_variable("ADMIN_USER")
-    hashed_password = get_env_variable("ADMIN_PASSWORD_HASHED")
+    hashed_password = read_secret("ADMIN_PASSWORD_HASHED")
     if not (valid_user == username):
         return False
     if not verify_password(password, hashed_password):
