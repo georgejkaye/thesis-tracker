@@ -3,17 +3,24 @@ from datetime import datetime
 from typing import Any, Optional
 from click import Option
 from fastapi import HTTPException
+import os
 
 import psycopg2
 
 from api.auth import get_env_variable
 
+def read_secret(file : str) -> Optional[str]:
+    if os.path.isfile(file) :
+        with open(file) as f:
+            value = f.readline().replace("\n", "")
+        return value
+    return None
 
 def connect() -> tuple[Any, Any]:
     conn = psycopg2.connect(
         dbname=get_env_variable("DB_NAME"),
         user=get_env_variable("DB_USER"),
-        password=get_env_variable("DB_PASSWORD"),
+        password=read_secret(get_env_variable("DB_PASSWORD")),
         host=get_env_variable("DB_HOST"),
     )
     cur = conn.cursor()
