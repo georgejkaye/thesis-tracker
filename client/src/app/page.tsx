@@ -42,9 +42,7 @@ export default function Home() {
     const wordsPerPageStyle = `bg-pink-400 text-white`
     const diagramsStyle = `bg-teal-400 text-white`
     const filesStyle = `bg-orange-400 text-white`
-    const mainDivStyle =
-        "text-center text-2xl absolute inset-0 m-auto top-1/2 " +
-        "left-1/2 -translate-x-1/2 -translate-y-1/2"
+    const mainDivStyle = "text-center text-2xl m-auto"
     return (
         <main className={manrope.className}>
             <div className={mainDivStyle}>
