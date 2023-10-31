@@ -1,13 +1,12 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Optional
-from click import Option
 from fastapi import HTTPException
-import os
 
 import psycopg2
 
 from api.auth import get_env_variable, read_secret
+
 
 def connect() -> tuple[Any, Any]:
     conn = psycopg2.connect(
@@ -31,13 +30,18 @@ class Commit:
     commit_datetime: datetime
     words: int
     pages: int
+    diagrams: int
+    files: int
 
 
 def add_commit(new_commit: Commit) -> None:
     (conn, cur) = connect()
     statement = """
-        INSERT INTO commit(commit_sha, commit_datetime, words, pages)
-        VALUES (%(sha)s, %(dt)s, %(words)s, %(pages)s)
+        INSERT INTO commit(
+            commit_sha, commit_datetime, words, pages, diagrams, files
+        ) VALUES (
+            %(sha)s, %(dt)s, %(words)s, %(pages)s, %(diagrams)s, %(files)s
+        )
     """
     try:
         cur.execute(
@@ -47,13 +51,14 @@ def add_commit(new_commit: Commit) -> None:
                 "dt": new_commit.commit_datetime,
                 "words": new_commit.words,
                 "pages": new_commit.pages,
+                "diagrams": new_commit.diagrams,
+                "files": new_commit.files,
             },
         )
         conn.commit()
         disconnect(conn, cur)
-    except psycopg2.UniqueViolation as e:
+    except psycopg2.errors.UniqueViolation:
         raise HTTPException(status_code=400, detail="Commit already exists")
-
 
 
 def get_commits_from_db(
@@ -76,6 +81,8 @@ def get_commits_from_db(
     """
     cur.execute(statement)
     rows = cur.fetchall()
-    commit_objects = map(lambda b: Commit(b[0], b[1], b[2], b[3]), rows)
+    commit_objects = list(
+        map(lambda b: Commit(b[0], b[1], b[2], b[3], b[4], b[5]), rows)
+    )
     conn.close()
     return commit_objects
