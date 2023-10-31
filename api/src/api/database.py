@@ -75,7 +75,7 @@ def get_commits_from_db(
     else:
         conditions_string = f"WHERE {' AND '.join(conditions)}"
     statement = f"""
-        SELECT commit_sha, commit_datetime, words, pages, figures, files FROM commit
+        SELECT commit_sha, commit_datetime, words, pages, diagrams, files FROM commit
         {conditions_string}
         ORDER BY commit_datetime DESC
 
