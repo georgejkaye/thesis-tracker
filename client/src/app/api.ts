@@ -6,6 +6,8 @@ export interface Commit {
     datetime: Date
     words: number
     pages: number
+    diagrams: number
+    files: number
 }
 
 export const getDateString = (datetime: Date) => {
@@ -49,6 +51,8 @@ export const getCommits = async (
         datetime: new Date(c.commit_datetime),
         words: c.words,
         pages: c.pages,
+        diagrams: c.diagrams,
+        files: c.files,
     }))
     setCommits(objects)
 }
