@@ -10,6 +10,19 @@ const manrope = Manrope({
     display: "swap",
 })
 
+const statStyle = "m-2 p-2 rounded font-bold"
+
+const Stat = (props: { name: string; value: string; styles: string }) => (
+    <div className="m-4 flex flex-row">
+        <div className="w-1/2 text-right">
+            <span className={`${statStyle} ${props.styles} w-1/2`}>
+                {props.value}
+            </span>
+        </div>
+        <div className="w-1/2 text-left">{props.name}</div>
+    </div>
+)
+
 export default function Home() {
     const [commits, setCommits] = useState<Commit[]>([])
     const [mainCommit, setMainCommit] = useState<Commit | undefined>(undefined)
@@ -23,44 +36,63 @@ export default function Home() {
             setMainCommit(commits[0])
         }
     })
-    const sharedStyle = "m-2 p-2 rounded font-bold"
-    const dateStyle = `${sharedStyle} bg-blue-400 text-white`
-    const wordsStyle = `${sharedStyle} bg-red-400 text-white`
-    const pagesStyle = `${sharedStyle} bg-green-400 text-white`
-    const wordsPerPageStyle = `${sharedStyle} bg-pink-400 text-white`
+    const dateStyle = `bg-blue-400 text-white`
+    const wordsStyle = `bg-red-400 text-white`
+    const pagesStyle = `bg-emerald-500 text-white`
+    const wordsPerPageStyle = `bg-pink-400 text-white`
+    const diagramsStyle = `bg-teal-400 text-white`
+    const filesStyle = `bg-orange-400 text-white`
+    const mainDivStyle =
+        "text-center text-2xl absolute inset-0 m-auto top-1/2 " +
+        "left-1/2 -translate-x-1/2 -translate-y-1/2"
     return (
         <main className={manrope.className}>
-            <div className="text-center text-2xl m-10 mt-48">
+            <div className={mainDivStyle}>
                 <div className="text-4xl font-bold m-10">Thesis tracker</div>
                 {!mainCommit ? (
                     ""
                 ) : (
                     <div className="flex flex-col">
-                        <div className="mb-10">
-                            <span className={dateStyle}>
+                        <div className="m-4 leading-extra-loose">
+                            As of commit
+                            <span className={`${statStyle} ${dateStyle}`}>
+                                {mainCommit.sha.substring(0, 8)}
+                            </span>
+                            made at
+                            <span
+                                className={`${statStyle} ${dateStyle} whitespace-nowrap`}
+                            >
                                 {getCommitDatetime(mainCommit)}
                             </span>
                         </div>
-                        <div className="m-4">
-                            <span className={wordsStyle}>
-                                {getCommitWords(mainCommit)}
-                            </span>
-                            words
-                        </div>
-                        <div className="m-4">
-                            <span className={pagesStyle}>
-                                {mainCommit.pages}
-                            </span>
-                            pages
-                        </div>
-                        <div className="m-4">
-                            <span className={wordsPerPageStyle}>
-                                {(mainCommit.words / mainCommit.pages).toFixed(
-                                    3
-                                )}
-                            </span>
-                            words per page
-                        </div>
+                        <div className="m-4 mb-8">George's thesis has</div>
+                        <Stat
+                            name="words"
+                            value={getCommitWords(mainCommit)}
+                            styles={wordsStyle}
+                        />
+                        <Stat
+                            name="pages"
+                            value={`${mainCommit.pages}`}
+                            styles={pagesStyle}
+                        />
+                        <Stat
+                            name="words/page"
+                            value={(
+                                mainCommit.words / mainCommit.pages
+                            ).toFixed(2)}
+                            styles={wordsPerPageStyle}
+                        />
+                        <Stat
+                            name="diagrams"
+                            value={`${mainCommit.diagrams}`}
+                            styles={diagramsStyle}
+                        />
+                        <Stat
+                            name="files"
+                            value={`${mainCommit.files}`}
+                            styles={filesStyle}
+                        />
                     </div>
                 )}
             </div>
