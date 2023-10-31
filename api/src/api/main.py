@@ -55,8 +55,10 @@ async def post_commit(
     commit_datetime: datetime,
     words: int,
     pages: int,
+    diagrams: int,
+    files: int,
 ) -> None:
-    commit = Commit(commit_sha, commit_datetime, words, pages)
+    commit = Commit(commit_sha, commit_datetime, words, pages, diagrams, files)
     add_commit(commit)
 
 
