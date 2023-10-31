@@ -65,7 +65,7 @@ export default function Home() {
                                 {getCommitDatetime(mainCommit)}
                             </span>
                         </div>
-                        <div className="m-4 mb-8">George's thesis has</div>
+                        <div className="m-4 mb-8">George&apos;s thesis has</div>
                         <Stat
                             name="words"
                             value={getCommitWords(mainCommit)}
