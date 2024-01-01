@@ -25,12 +25,12 @@ const Stat = (props: { name: string; value: string; styles: string }) => (
 )
 
 const CountdownElement = (props: { value: number; text: string }) => (
-    <>
+    <div className="flex flex-row items-center">
         <div className={`${statStyle} w-16 bg-blue-400 text-white`}>
             {props.value}
         </div>
         <div className="pr-2">{props.text}</div>
-    </>
+    </div>
 )
 
 const Countdown = (props: { deadline: Date | undefined }) => {
@@ -56,7 +56,7 @@ const Countdown = (props: { deadline: Date | undefined }) => {
                 The submission deadline is {props.deadline.toLocaleDateString()}
                 , which is in
             </div>
-            <div className="flex flex-row justify-center items-center my-2">
+            <div className="flex flex-row flex-wrap justify-center items-center my-2">
                 <CountdownElement value={days} text="days" />
                 <CountdownElement value={hours} text="hours" />
                 <CountdownElement value={minutes} text="minutes" />
