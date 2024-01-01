@@ -23,6 +23,48 @@ const Stat = (props: { name: string; value: string; styles: string }) => (
     </div>
 )
 
+const CountdownElement = (props: { value: number; text: string }) => (
+    <>
+        <div className={`${statStyle} w-16 bg-blue-400 text-white`}>
+            {props.value}
+        </div>
+        <div className="pr-2">{props.text}</div>
+    </>
+)
+
+const Countdown = (props: { deadline: Date | undefined }) => {
+    const [time, setTime] = useState(new Date())
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(new Date())
+        }, 1000)
+        return () => clearInterval(interval)
+    })
+    const timeRemaining = !props.deadline
+        ? 0
+        : props.deadline.getTime() / 1000 - time.getTime() / 1000
+    const days = Math.floor(timeRemaining / 86400)
+    const hours = Math.floor(Math.floor(timeRemaining % 86400) / 3600)
+    const minutes = Math.floor(Math.floor(timeRemaining % 3600) / 60)
+    const seconds = Math.floor(timeRemaining % 60)
+    return !props.deadline ? (
+        ""
+    ) : (
+        <div className="m-5">
+            <div className="p-2">
+                The submission deadline is {props.deadline.toLocaleDateString()}
+                , which is in
+            </div>
+            <div className="flex flex-row justify-center items-center my-2">
+                <CountdownElement value={days} text="days" />
+                <CountdownElement value={hours} text="hours" />
+                <CountdownElement value={minutes} text="minutes" />
+                <CountdownElement value={seconds} text="seconds" />
+            </div>
+        </div>
+    )
+}
+
 export default function Home() {
     const [commits, setCommits] = useState<Commit[]>([])
     const [mainCommit, setMainCommit] = useState<Commit | undefined>(undefined)
@@ -43,6 +85,9 @@ export default function Home() {
     const diagramsStyle = `bg-teal-400 text-white`
     const filesStyle = `bg-orange-400 text-white`
     const mainDivStyle = "text-center text-2xl m-auto"
+    const deadline = process.env.NEXT_PUBLIC_DEADLINE
+        ? new Date(Date.parse(process.env.NEXT_PUBLIC_DEADLINE))
+        : new Date()
     return (
         <main className={manrope.className}>
             <div className={mainDivStyle}>
@@ -91,6 +136,7 @@ export default function Home() {
                             value={`${mainCommit.files}`}
                             styles={filesStyle}
                         />
+                        <Countdown deadline={deadline} />
                     </div>
                 )}
             </div>
