@@ -7,12 +7,14 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
-def read_secret(file : str) -> Optional[str]:
-    if os.path.isfile(file) :
+
+def read_secret(file: str) -> Optional[str]:
+    if os.path.isfile(file):
         with open(file) as f:
             value = f.readline().replace("\n", "")
         return value
     raise ValueError(f"Secret file {file} does not exist")
+
 
 def get_env_variable(name: str) -> str:
     var = os.getenv(name)
