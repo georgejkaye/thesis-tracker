@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import { Commit, getCommitDatetime, getCommitWords, getCommits } from "./api"
 import { Manrope } from "next/font/google"
+import { ColorRing } from "react-loader-spinner"
 
 const manrope = Manrope({
     weight: ["400", "700"],
@@ -68,8 +69,9 @@ const Countdown = (props: { deadline: Date | undefined }) => {
 export default function Home() {
     const [commits, setCommits] = useState<Commit[]>([])
     const [mainCommit, setMainCommit] = useState<Commit | undefined>(undefined)
+    const [isLoading, setLoading] = useState(true)
     useEffect(() => {
-        getCommits(setCommits)
+        getCommits(setCommits, setLoading)
     }, [])
     useEffect(() => {
         if (commits.length === 0) {
@@ -84,7 +86,8 @@ export default function Home() {
     const wordsPerPageStyle = `bg-pink-400 text-white`
     const diagramsStyle = `bg-teal-400 text-white`
     const filesStyle = `bg-orange-400 text-white`
-    const mainDivStyle = "text-center text-2xl m-auto"
+    const mainDivStyle =
+        "text-center text-2xl m-auto flex flex-col justify-center"
     const deadline = process.env.NEXT_PUBLIC_DEADLINE
         ? new Date(Date.parse(process.env.NEXT_PUBLIC_DEADLINE))
         : new Date()
@@ -93,7 +96,23 @@ export default function Home() {
             <div className={mainDivStyle}>
                 <div className="text-4xl font-bold m-10">Thesis tracker</div>
                 {!mainCommit ? (
-                    ""
+                    <div className="text-center m-auto">
+                        <ColorRing
+                            visible={true}
+                            height="80"
+                            width="80"
+                            ariaLabel="color-ring-loading"
+                            wrapperStyle={{}}
+                            wrapperClass="color-ring-wrapper"
+                            colors={[
+                                "#60a5fa",
+                                "#60a5fa",
+                                "#60a5fa",
+                                "#60a5fa",
+                                "#60a5fa",
+                            ]}
+                        />
+                    </div>
                 ) : (
                     <div className="flex flex-col">
                         <div className="m-4 leading-extra-loose">

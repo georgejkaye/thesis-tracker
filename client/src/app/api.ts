@@ -40,7 +40,8 @@ export const getCommitWords = (c: Commit) =>
     `${c.words.toLocaleString("en-UK")}`
 
 export const getCommits = async (
-    setCommits: Dispatch<SetStateAction<Commit[]>>
+    setCommits: Dispatch<SetStateAction<Commit[]>>,
+    setLoading: Dispatch<SetStateAction<boolean>>
 ) => {
     let endpoint = `/api/commits`
     let response = await axios.get(endpoint)
@@ -55,4 +56,5 @@ export const getCommits = async (
         files: c.files,
     }))
     setCommits(objects)
+    setTimeout(() => setLoading(false), 500)
 }
