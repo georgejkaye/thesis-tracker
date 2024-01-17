@@ -6,7 +6,6 @@ export interface Commit {
     datetime: Date
     words: number
     pages: number
-    diagrams: number
     files: number
 }
 
@@ -45,13 +44,11 @@ export const getCommits = async (
     let endpoint = `/api/commits`
     let response = await axios.get(endpoint)
     let data = response.data
-    console.log(data)
     let objects = data.map((c: any) => ({
         sha: c.commit_sha,
         datetime: new Date(c.commit_datetime),
         words: c.words,
         pages: c.pages,
-        diagrams: c.diagrams,
         files: c.files,
     }))
     setCommits(objects)
