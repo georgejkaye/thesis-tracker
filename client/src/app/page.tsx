@@ -146,11 +146,6 @@ export default function Home() {
                             styles={wordsPerPageStyle}
                         />
                         <Stat
-                            name="diagrams"
-                            value={`${mainCommit.diagrams}`}
-                            styles={diagramsStyle}
-                        />
-                        <Stat
                             name="files"
                             value={`${mainCommit.files}`}
                             styles={filesStyle}
