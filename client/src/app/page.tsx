@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Commit, getCommitDatetime, getCommitWords, getCommits } from "./api"
 import { Manrope } from "next/font/google"
 import { ColorRing } from "react-loader-spinner"
+import { Graph } from "./graph"
 
 const manrope = Manrope({
     weight: ["400", "700"],
@@ -68,6 +69,7 @@ const Countdown = (props: { deadline: Date | undefined }) => {
 
 export default function Home() {
     const [commits, setCommits] = useState<Commit[]>([])
+    const [currentCommit, setCurrentCommit] = useState(0)
     const [mainCommit, setMainCommit] = useState<Commit | undefined>(undefined)
     const [isLoading, setLoading] = useState(true)
     useEffect(() => {
@@ -77,9 +79,9 @@ export default function Home() {
         if (commits.length === 0) {
             setMainCommit(undefined)
         } else {
-            setMainCommit(commits[0])
+            setMainCommit(commits[currentCommit])
         }
-    })
+    }, [commits])
     const dateStyle = `bg-blue-400 text-white`
     const wordsStyle = `bg-red-400 text-white`
     const pagesStyle = `bg-emerald-500 text-white`
@@ -87,7 +89,7 @@ export default function Home() {
     const diagramsStyle = `bg-teal-400 text-white`
     const filesStyle = `bg-orange-400 text-white`
     const mainDivStyle =
-        "text-center text-2xl m-auto flex flex-col justify-center"
+        "text-center text-2xl w-mobile md:w-content m-auto flex flex-col justify-center"
     const deadline = process.env.NEXT_PUBLIC_DEADLINE
         ? new Date(Date.parse(process.env.NEXT_PUBLIC_DEADLINE))
         : new Date()
@@ -132,6 +134,10 @@ export default function Home() {
                             name="words"
                             value={getCommitWords(mainCommit)}
                             styles={wordsStyle}
+                        />
+                        <Graph
+                            commits={commits}
+                            currentCommit={currentCommit}
                         />
                         <Stat
                             name="pages"
