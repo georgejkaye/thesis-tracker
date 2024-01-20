@@ -16,6 +16,10 @@ const config: Config = {
             lineHeight: {
                 "extra-loose": "2.5",
             },
+            width: {
+                content: "700px",
+                mobile: "400px",
+            },
         },
     },
     plugins: [],
