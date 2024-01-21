@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Commit, getCommitDatetime, getCommitWords, getCommits } from "./api"
 import { Manrope } from "next/font/google"
 import { ColorRing } from "react-loader-spinner"
-import { Graph } from "./graph"
+import { Graph, StatAndGraph, statStyle } from "./graph"
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
@@ -15,19 +15,6 @@ const manrope = Manrope({
     subsets: ["latin"],
     display: "swap",
 })
-
-const statStyle = "m-2 p-2 rounded font-bold"
-
-const Stat = (props: { name: string; value: string; styles: string }) => (
-    <div className="m-4 flex flex-row">
-        <div className="w-1/2 text-right">
-            <span className={`${statStyle} ${props.styles} w-1/2`}>
-                {props.value}
-            </span>
-        </div>
-        <div className="w-1/2 text-left">{props.name}</div>
-    </div>
-)
 
 const CountdownElement = (props: { value: number; text: string }) => (
     <div className="flex flex-row items-center">
@@ -90,11 +77,6 @@ export default function Home() {
         setMainCommit(commits[currentCommit])
     }, [currentCommit])
     const dateStyle = `bg-blue-400 text-white`
-    const wordsStyle = `bg-red-400 text-white`
-    const pagesStyle = `bg-emerald-500 text-white`
-    const wordsPerPageStyle = `bg-pink-400 text-white`
-    const diagramsStyle = `bg-teal-400 text-white`
-    const filesStyle = `bg-orange-400 text-white`
     const mainDivStyle =
         "text-center text-2xl w-mobile md:w-content m-auto flex flex-col justify-center"
     const deadline = process.env.NEXT_PUBLIC_DEADLINE
@@ -185,44 +167,54 @@ export default function Home() {
                                 />
                             </div>
                         </div>
-                        <Stat
-                            name="words"
-                            value={getCommitWords(mainCommit)}
-                            styles={wordsStyle}
-                        />
-                        <Graph
-                            commits={commits}
-                            currentCommit={currentCommit}
-                            setCurrentCommit={(i) => setCurrentCommit(i)}
-                            getDatapoint={(c) => c.words}
-                            seriesName="Words"
-                            colour="#f87171"
-                        />
-                        <Stat
-                            name="pages"
-                            value={`${mainCommit.pages}`}
-                            styles={pagesStyle}
-                        />
-                        <Graph
-                            commits={commits}
-                            currentCommit={currentCommit}
-                            setCurrentCommit={(i) => setCurrentCommit(i)}
-                            getDatapoint={(c) => c.pages}
-                            seriesName="Pages"
-                            colour="#10b981"
-                        />
-                        <Stat
-                            name="words/page"
-                            value={(
-                                mainCommit.words / mainCommit.pages
-                            ).toFixed(2)}
-                            styles={wordsPerPageStyle}
-                        />
-                        <Stat
-                            name="files"
-                            value={`${mainCommit.files}`}
-                            styles={filesStyle}
-                        />
+                        <div className="flex flex-row flex-wrap">
+                            <StatAndGraph
+                                commits={commits}
+                                currentCommitIndex={currentCommit}
+                                currentCommit={mainCommit}
+                                setCurrentCommit={(i) => setCurrentCommit(i)}
+                                getDatapoint={(c) => c.words}
+                                getDatastring={(c) => c.words.toLocaleString()}
+                                seriesName="Words"
+                                displayText="words"
+                                colour="bg-[#f87171]"
+                            />
+                            <StatAndGraph
+                                commits={commits}
+                                currentCommitIndex={currentCommit}
+                                currentCommit={mainCommit}
+                                setCurrentCommit={(i) => setCurrentCommit(i)}
+                                getDatapoint={(c) => c.pages}
+                                getDatastring={(c) => c.pages.toLocaleString()}
+                                seriesName="Pages"
+                                displayText="pages"
+                                colour="bg-[#10b981]"
+                            />
+                            <StatAndGraph
+                                commits={commits}
+                                currentCommitIndex={currentCommit}
+                                currentCommit={mainCommit}
+                                setCurrentCommit={(i) => setCurrentCommit(i)}
+                                getDatapoint={(c) => c.words / c.pages}
+                                getDatastring={(c) =>
+                                    (c.words / c.pages).toFixed(2)
+                                }
+                                seriesName="Words per page"
+                                displayText="words/page"
+                                colour="bg-[#f472b6]"
+                            />
+                            <StatAndGraph
+                                commits={commits}
+                                currentCommitIndex={currentCommit}
+                                currentCommit={mainCommit}
+                                setCurrentCommit={(i) => setCurrentCommit(i)}
+                                getDatapoint={(c) => c.files}
+                                getDatastring={(c) => c.files.toLocaleString()}
+                                seriesName="Files"
+                                displayText="files"
+                                colour="bg-[#fb923c]"
+                            />
+                        </div>
                         <Countdown deadline={deadline} />
                     </div>
                 )}
