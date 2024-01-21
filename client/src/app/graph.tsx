@@ -51,6 +51,12 @@ export const Graph = (props: {
             },
         },
         yaxis: {
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
             labels: {
                 show: false,
             },
@@ -101,6 +107,11 @@ export const Graph = (props: {
                 },
             },
         },
+        grid: {
+            padding: {
+                left: -1,
+            },
+        },
     }
     return (
         typeof window !== "undefined" && (
@@ -140,7 +151,7 @@ export const StatAndGraph = (props: {
     displayText: string
     colour: string
 }) => (
-    <div className="w-full md:w-1/2">
+    <div className="w-full md:w-1/2 justify-center">
         <Stat
             name={props.displayText}
             value={props.getDatastring(props.currentCommit)}
