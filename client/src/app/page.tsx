@@ -144,7 +144,7 @@ export default function Home() {
                                     <span
                                         className={`${statStyle} ${dateStyle}`}
                                     >
-                                        {mainCommit.sha.substring(0, 8)}
+                                        {mainCommit.sha.substring(0, 7)}
                                     </span>
                                 </div>
                                 <div>
