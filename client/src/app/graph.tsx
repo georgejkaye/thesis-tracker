@@ -35,6 +35,12 @@ export const Graph = (props: {
             width: 5,
         },
         xaxis: {
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
             tickAmount: 6,
             tooltip: {
                 enabled: false,
