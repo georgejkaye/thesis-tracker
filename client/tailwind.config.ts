@@ -21,6 +21,9 @@ const config: Config = {
                 commits: "600px",
                 mobile: "400px",
             },
+            colors: {
+                bg: "#282a36",
+            },
         },
     },
     plugins: [],

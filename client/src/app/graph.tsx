@@ -80,6 +80,7 @@ export const Graph = (props: {
             },
         },
         tooltip: {
+            theme: "dark",
             shared: true,
             x: {
                 formatter: function (val) {
@@ -115,7 +116,7 @@ export const Graph = (props: {
     )
 }
 
-export const statStyle = "m-2 p-2 rounded font-bold"
+export const statStyle = "m-2 p-2 rounded font-bold text-[#282A36]"
 
 const Stat = (props: { name: string; value: string; styles: string }) => (
     <div className="m-4 flex flex-row justify-center">
