@@ -18,6 +18,7 @@ const config: Config = {
             },
             width: {
                 content: "700px",
+                commits: "600px",
                 mobile: "400px",
             },
         },
