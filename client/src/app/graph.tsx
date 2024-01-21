@@ -5,30 +5,32 @@ import dynamic from "next/dynamic"
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false })
 
-const commitsToData = (commits: Commit[]) => {
-    const data = commits.map((commit, i) => [
-        commit.datetime.getTime(),
-        commit.words,
-    ])
-    return [
-        {
-            name: "Words",
-            data,
-        },
-    ]
-}
-
 export const Graph = (props: {
     commits: Commit[]
     currentCommit: number
     setCurrentCommit: (i: number) => void
+    getDatapoint: (c: Commit) => number
+    seriesName: string
+    colour: string
 }) => {
+    const commitsToData = (commits: Commit[]) => {
+        const data = commits.map((commit, i) => [
+            commit.datetime.getTime(),
+            props.getDatapoint(commit),
+        ])
+        return [
+            {
+                name: props.seriesName,
+                data,
+            },
+        ]
+    }
     const [series, setSeries] = useState<any>([])
     useEffect(() => {
         setSeries(commitsToData(props.commits))
     }, [props.commits])
     let options: ApexOptions = {
-        colors: ["#f87171"],
+        colors: [props.colour],
         stroke: {
             width: 5,
         },
@@ -53,7 +55,7 @@ export const Graph = (props: {
                     seriesIndex: 0,
                     dataPointIndex: props.currentCommit,
                     size: 5,
-                    fillColor: "#f87171",
+                    fillColor: props.colour,
                 },
             ],
         },

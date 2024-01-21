@@ -194,11 +194,22 @@ export default function Home() {
                             commits={commits}
                             currentCommit={currentCommit}
                             setCurrentCommit={(i) => setCurrentCommit(i)}
+                            getDatapoint={(c) => c.words}
+                            seriesName="Words"
+                            colour="#f87171"
                         />
                         <Stat
                             name="pages"
                             value={`${mainCommit.pages}`}
                             styles={pagesStyle}
+                        />
+                        <Graph
+                            commits={commits}
+                            currentCommit={currentCommit}
+                            setCurrentCommit={(i) => setCurrentCommit(i)}
+                            getDatapoint={(c) => c.pages}
+                            seriesName="Pages"
+                            colour="#10b981"
                         />
                         <Stat
                             name="words/page"
