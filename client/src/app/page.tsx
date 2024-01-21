@@ -193,6 +193,7 @@ export default function Home() {
                         <Graph
                             commits={commits}
                             currentCommit={currentCommit}
+                            setCurrentCommit={(i) => setCurrentCommit(i)}
                         />
                         <Stat
                             name="pages"

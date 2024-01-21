@@ -18,7 +18,11 @@ const commitsToData = (commits: Commit[]) => {
     ]
 }
 
-export const Graph = (props: { commits: Commit[]; currentCommit: number }) => {
+export const Graph = (props: {
+    commits: Commit[]
+    currentCommit: number
+    setCurrentCommit: (i: number) => void
+}) => {
     const [series, setSeries] = useState<any>([])
     useEffect(() => {
         setSeries(commitsToData(props.commits))
@@ -60,6 +64,11 @@ export const Graph = (props: { commits: Commit[]; currentCommit: number }) => {
             },
             zoom: {
                 enabled: false,
+            },
+            events: {
+                markerClick: (e, chartContext, config) => {
+                    props.setCurrentCommit(config.dataPointIndex)
+                },
             },
         },
         tooltip: {
