@@ -4,6 +4,10 @@ import { Commit, getCommitDatetime, getCommitWords, getCommits } from "./api"
 import { Manrope } from "next/font/google"
 import { ColorRing } from "react-loader-spinner"
 import { Graph } from "./graph"
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight"
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft"
 
 const manrope = Manrope({
     weight: ["400", "700"],
@@ -82,6 +86,9 @@ export default function Home() {
             setMainCommit(commits[currentCommit])
         }
     }, [commits])
+    useEffect(() => {
+        setMainCommit(commits[currentCommit])
+    }, [currentCommit])
     const dateStyle = `bg-blue-400 text-white`
     const wordsStyle = `bg-red-400 text-white`
     const pagesStyle = `bg-emerald-500 text-white`
@@ -93,6 +100,27 @@ export default function Home() {
     const deadline = process.env.NEXT_PUBLIC_DEADLINE
         ? new Date(Date.parse(process.env.NEXT_PUBLIC_DEADLINE))
         : new Date()
+    const firstCommit = (_: React.MouseEvent<SVGSVGElement>) => {
+        setCurrentCommit(commits.length - 1)
+    }
+    const previousCommit = (_: React.MouseEvent<SVGSVGElement>) => {
+        if (currentCommit !== commits.length - 1) {
+            setCurrentCommit(currentCommit + 1)
+        }
+    }
+    const nextCommit = (_: React.MouseEvent<SVGSVGElement>) => {
+        if (currentCommit !== 0) {
+            setCurrentCommit(currentCommit - 1)
+        }
+    }
+    const lastCommit = (_: React.MouseEvent<SVGSVGElement>) => {
+        setCurrentCommit(0)
+    }
+    const previousStyle =
+        currentCommit !== commits.length - 1 ? "cursor-pointer" : "invisible"
+    const firstStyle = previousStyle
+    const nextStyle = currentCommit !== 0 ? "cursor-pointer" : "invisible"
+    const lastStyle = nextStyle
     return (
         <main className={manrope.className}>
             <div className={mainDivStyle}>
@@ -117,19 +145,46 @@ export default function Home() {
                     </div>
                 ) : (
                     <div className="flex flex-col">
-                        <div className="m-4 leading-extra-loose">
-                            As of commit
-                            <span className={`${statStyle} ${dateStyle}`}>
-                                {mainCommit.sha.substring(0, 8)}
-                            </span>
-                            made at
-                            <span
-                                className={`${statStyle} ${dateStyle} whitespace-nowrap`}
-                            >
-                                {getCommitDatetime(mainCommit)}
-                            </span>
+                        <div className="m-4 leading-extra-loose flex flex-col md:flex-row align-center justify-center items-center">
+                            <div className="flex flex-row">
+                                <KeyboardDoubleArrowLeftIcon
+                                    className={`m-2 ${firstStyle}`}
+                                    onClick={firstCommit}
+                                />
+                                <KeyboardArrowLeftIcon
+                                    className={`m-2 ${previousStyle}`}
+                                    onClick={previousCommit}
+                                />
+                            </div>
+                            <div className="flex flex-col md:flex-row w-mobile md:w-commits justify-center">
+                                <div>
+                                    <span className="ml-2">Commit</span>
+                                    <span
+                                        className={`${statStyle} ${dateStyle}`}
+                                    >
+                                        {mainCommit.sha.substring(0, 8)}
+                                    </span>
+                                </div>
+                                <div>
+                                    at
+                                    <span
+                                        className={`${statStyle} ${dateStyle} whitespace-nowrap`}
+                                    >
+                                        {getCommitDatetime(mainCommit)}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex flex-row">
+                                <KeyboardArrowRightIcon
+                                    className={`m-2 ${nextStyle}`}
+                                    onClick={nextCommit}
+                                />
+                                <KeyboardDoubleArrowRightIcon
+                                    className={`m-2 ${lastStyle}`}
+                                    onClick={lastCommit}
+                                />
+                            </div>
                         </div>
-                        <div className="m-4 mb-8">George&apos;s thesis has</div>
                         <Stat
                             name="words"
                             value={getCommitWords(mainCommit)}
