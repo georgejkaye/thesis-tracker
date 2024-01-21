@@ -104,7 +104,7 @@ export default function Home() {
     const nextStyle = currentCommit !== 0 ? "cursor-pointer" : "invisible"
     const lastStyle = nextStyle
     return (
-        <main className={manrope.className}>
+        <main className={`${manrope.className}`}>
             <div className={mainDivStyle}>
                 <div className="text-4xl font-bold m-10">Thesis tracker</div>
                 {!mainCommit ? (
@@ -177,7 +177,7 @@ export default function Home() {
                                 getDatastring={(c) => c.words.toLocaleString()}
                                 seriesName="Words"
                                 displayText="words"
-                                colour="bg-[#f87171]"
+                                colour="bg-[#FF5555]"
                             />
                             <StatAndGraph
                                 commits={commits}
@@ -188,7 +188,7 @@ export default function Home() {
                                 getDatastring={(c) => c.pages.toLocaleString()}
                                 seriesName="Pages"
                                 displayText="pages"
-                                colour="bg-[#10b981]"
+                                colour="bg-[#50FA7B]"
                             />
                             <StatAndGraph
                                 commits={commits}
@@ -201,7 +201,7 @@ export default function Home() {
                                 }
                                 seriesName="Words per page"
                                 displayText="words/page"
-                                colour="bg-[#f472b6]"
+                                colour="bg-[#FF79C6]"
                             />
                             <StatAndGraph
                                 commits={commits}
@@ -212,7 +212,7 @@ export default function Home() {
                                 getDatastring={(c) => c.files.toLocaleString()}
                                 seriesName="Files"
                                 displayText="files"
-                                colour="bg-[#fb923c]"
+                                colour="bg-[#FFB86C]"
                             />
                         </div>
                         <Countdown deadline={deadline} />
