@@ -89,7 +89,14 @@ export const Graph = (props: {
             },
             y: {
                 formatter: function (val) {
-                    return val.toLocaleString()
+                    if (Number.isInteger(val)) {
+                        return val.toLocaleString("en-UK")
+                    } else {
+                        return val.toLocaleString("en-UK", {
+                            maximumFractionDigits: 2,
+                            minimumFractionDigits: 2,
+                        })
+                    }
                 },
             },
         },
