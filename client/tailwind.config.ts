@@ -17,7 +17,7 @@ const config: Config = {
                 "extra-loose": "2.5",
             },
             width: {
-                content: "800px",
+                content: "750px",
                 commits: "600px",
                 mobile: "400px",
             },

@@ -118,13 +118,13 @@ export const Graph = (props: {
 export const statStyle = "m-2 p-2 rounded font-bold"
 
 const Stat = (props: { name: string; value: string; styles: string }) => (
-    <div className="m-4 flex flex-row">
-        <div className="w-1/2 text-right">
+    <div className="m-4 flex flex-row justify-center">
+        <div>
             <span className={`${statStyle} ${props.styles} w-1/2`}>
                 {props.value}
             </span>
         </div>
-        <div className="w-1/2 text-left">{props.name}</div>
+        <div>{props.name}</div>
     </div>
 )
 
