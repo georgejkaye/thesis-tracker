@@ -35,6 +35,12 @@ export const Graph = (props: {
             width: 5,
         },
         xaxis: {
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
             tickAmount: 6,
             tooltip: {
                 enabled: false,
@@ -83,7 +89,14 @@ export const Graph = (props: {
             },
             y: {
                 formatter: function (val) {
-                    return val.toLocaleString()
+                    if (Number.isInteger(val)) {
+                        return val.toLocaleString("en-UK")
+                    } else {
+                        return val.toLocaleString("en-UK", {
+                            maximumFractionDigits: 2,
+                            minimumFractionDigits: 2,
+                        })
+                    }
                 },
             },
         },
@@ -101,3 +114,44 @@ export const Graph = (props: {
         )
     )
 }
+
+export const statStyle = "m-2 p-2 rounded font-bold"
+
+const Stat = (props: { name: string; value: string; styles: string }) => (
+    <div className="m-4 flex flex-row">
+        <div className="w-1/2 text-right">
+            <span className={`${statStyle} ${props.styles} w-1/2`}>
+                {props.value}
+            </span>
+        </div>
+        <div className="w-1/2 text-left">{props.name}</div>
+    </div>
+)
+
+export const StatAndGraph = (props: {
+    commits: Commit[]
+    currentCommitIndex: number
+    currentCommit: Commit
+    setCurrentCommit: (i: number) => void
+    getDatapoint: (c: Commit) => number
+    getDatastring: (c: Commit) => string
+    seriesName: string
+    displayText: string
+    colour: string
+}) => (
+    <div className="w-full md:w-1/2">
+        <Stat
+            name={props.displayText}
+            value={props.getDatastring(props.currentCommit)}
+            styles={`${props.colour} text-white`}
+        />
+        <Graph
+            commits={props.commits}
+            currentCommit={props.currentCommitIndex}
+            setCurrentCommit={(i) => props.setCurrentCommit(i)}
+            getDatapoint={props.getDatapoint}
+            seriesName={props.seriesName}
+            colour={props.colour.substring(4, 11)}
+        />
+    </div>
+)
